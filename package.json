@@ -1,0 +1,25 @@
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:frontend": "cd Frontend-App && npm start",
+    "start:backend": "mvnw spring-boot:run",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "concurrently": "^8.2.0",
+    "expo": "^54.0.32",
+    "react-dom": "19.1.0",
+    "react-native-web": "^0.21.0",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}
