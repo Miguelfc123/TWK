@@ -104,8 +104,6 @@ function PaginaInicial() {
 
   return (
     <div className="pagina-inicial">
-      <MixMatch />
-      
       <div className="produtos-section">
         <h2>{searchTerm ? `Resultados para: ${searchTerm}` : 'Nossos Produtos'}</h2>
         
@@ -119,6 +117,8 @@ function PaginaInicial() {
           )}
         </div>
       </div>
+
+      <MixMatch />
       
       {historico.length > 0 && (
         <div className="floating-historico">
