@@ -230,8 +230,8 @@ h1, h2, h3, h4, h5, h6 {
 /* Product Grid */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Back to 4 but cleaner */
-  gap: 25px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -242,25 +242,31 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease;
+  width: 280px;
+  height: auto; /* Let it expand to fit content, as 380px is too small for image+button */
+  background-color: #111;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #333;
 }
 
 .product-image-container {
   position: relative;
   background-color: transparent;
-  border-radius: 8px;
+  width: 280px;
+  height: 320px;
   overflow: hidden;
-  margin-bottom: 12px;
+  margin-bottom: 0; /* Remove margin as card has background now */
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 1/1;
-  border: 1px solid #111;
+  border-bottom: 1px solid #222;
 }
 
 .product-image {
-  max-width: 90%;
-  max-height: 90%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -288,6 +294,7 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding: 15px;
 }
 
 .product-name {
@@ -325,8 +332,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-comprar {
   border: 1px solid #fff;
-  border-radius: 25px;
-  padding: 8px 30px; /* Larger button */
+  border-radius: 30px;
+  padding: 12px 40px;
   background: transparent;
   color: #fff;
   font-size: 11px;
@@ -334,6 +341,7 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: uppercase;
   transition: all 0.3s ease;
   width: fit-content;
+  margin-top: 10px;
 }
 
 .btn-comprar:hover {
