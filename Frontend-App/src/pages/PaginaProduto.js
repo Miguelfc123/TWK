@@ -8,7 +8,7 @@ const produtosIniciais = [
     id: 1,
     name: 'buda',
     price: '75,00',
-    oldPrice: '550,00',
+    oldPrice: '100,00',
     image: process.env.PUBLIC_URL + '/buda.png',
     status: '-47%',
     category: 'Início > Buda >',
@@ -17,7 +17,7 @@ const produtosIniciais = [
     id: 3,
     name: 'more money azul',
     price: '75,00',
-    oldPrice: '270,00',
+    oldPrice: '100,00',
     image: process.env.PUBLIC_URL + '/more money azul.png',
     status: 'COMPRAR MAIS, PAGAR MENOS',
     category: 'Início > More Money >',
@@ -26,7 +26,7 @@ const produtosIniciais = [
     id: 4,
     name: 'more money vermelha',
     price: '75,00',
-    oldPrice: '323,00',
+    oldPrice: '100,00',
     image: process.env.PUBLIC_URL + '/more money vermelha.png',
     status: 'COMPRAR MAIS, PAGAR MENOS',
     category: 'Início > More Money >',
@@ -35,7 +35,7 @@ const produtosIniciais = [
     id: 5,
     name: 'swag',
     price: '75,00',
-    oldPrice: '149,90',
+    oldPrice: '100,00',
     image: process.env.PUBLIC_URL + '/swag.PNG',
     status: 'COMPRAR MAIS, PAGAR MENOS',
     category: 'Início > Swag >',
@@ -194,22 +194,6 @@ Gostaria de prosseguir com o pagamento.`;
           </div>
           
           <p className="produto-parcelamento">12x de R$30,52</p>
-          <p className="produto-promocao">Compre mais, pague menos</p>
-
-          {/* Tabela de Descontos */}
-          <table className="tabela-descontos">
-            <thead>
-              <tr>
-                <th>Quantidade</th>
-                <th>Desconto</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>2</td><td>5% OFF</td></tr>
-              <tr><td>3</td><td>10% OFF</td></tr>
-              <tr><td>4</td><td>15% OFF</td></tr>
-            </tbody>
-          </table>
           <p className="combinado-aviso">Pode ser combinado com qualquer produto da loja.</p>
 
           {/* Seletor de Tamanho */}
