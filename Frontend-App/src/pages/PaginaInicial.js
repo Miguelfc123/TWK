@@ -6,8 +6,17 @@ import MixMatch from '../components/MixMatch';
 function PaginaInicial() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [historico, setHistorico] = useState([]);
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get('search');
+
+  const formatarTempo = (isoString) => {
+    const diff = (new Date() - new Date(isoString)) / 1000;
+    if (diff < 60) return "Agora mesmo";
+    if (diff < 3600) return `Há ${Math.floor(diff / 60)} minuto(s)`;
+    if (diff < 86400) return `Há ${Math.floor(diff / 3600)} hora(s)`;
+    return `Há ${Math.floor(diff / 86400)} dia(s)`;
+  };
 
   useEffect(() => {
     // Carregue os produtos aqui (você pode usar uma API ou dados locais)
@@ -20,10 +29,10 @@ function PaginaInicial() {
         
         // Dados de exemplo
         setProducts([
-          { id: 1, name: 'Camiseta', price: '29.90', image: '/imagens/camisa/buda_carrosel.png', category: 'camiseta' },
-          { id: 2, name: 'Calça', price: '99.90', image: '/imagens/calca/CalçaPreta.png', category: 'calça' },
-          { id: 3, name: 'Tênis', price: '149.90', image: '/imagens/tenis/tenis1.jpg', category: 'tênis' },
-          { id: 4, name: 'Boné', price: '49.90', image: '/imagens/boné/boneGucciPreto.png', category: 'boné' },
+          { id: 1, name: 'Camiseta', price: '29,90', image: process.env.PUBLIC_URL + '/imagens/camisa/buda_carrosel.png', category: 'camiseta' },
+          { id: 2, name: 'Calça', price: '99,90', image: process.env.PUBLIC_URL + '/imagens/calca/CalçaPreta.png', category: 'calça' },
+          { id: 3, name: 'Tênis', price: '149,90', image: process.env.PUBLIC_URL + '/imagens/tenis/95Neon.png', category: 'tênis' },
+          { id: 4, name: 'Boné', price: '49,90', image: process.env.PUBLIC_URL + '/imagens/boné/boneGucciPreto.png', category: 'boné' },
         ]);
       } catch (error) {
         console.error('Erro ao carregar produtos:', error);
@@ -31,6 +40,16 @@ function PaginaInicial() {
     };
 
     loadProducts();
+
+    const loadHistory = () => {
+      const visited = JSON.parse(localStorage.getItem('visitedProducts')) || [];
+      setHistorico(visited.slice(0, 2));
+    };
+    
+    loadHistory();
+    // Atualizar tempo a cada minuto
+    const intervalId = setInterval(loadHistory, 60000);
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -62,6 +81,24 @@ function PaginaInicial() {
           )}
         </div>
       </div>
+      
+      {historico.length > 0 && (
+        <div className="floating-historico">
+          <div className="historico-header">RECENTEMENTE VISTOS</div>
+          {historico.map((item, index) => (
+            <div key={index} className="historico-item">
+              <div className="hist-img" style={{ width: '60px', height: '80px', minWidth: '60px' }}>
+                <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              </div>
+              <div className="hist-info">
+                <span className="hist-price">R$ {item.price}</span>
+                <span className="hist-name">{item.name.substring(0, 20)}{item.name.length > 20 ? '...' : ''}</span>
+                <span className="hist-time">{formatarTempo(item.visitedAt)}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
