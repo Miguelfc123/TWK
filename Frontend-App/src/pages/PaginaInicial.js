@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import MixMatch from '../components/MixMatch';
+import headerImg from '../assets/images/header.png';
 
 function PaginaInicial() {
   const [products, setProducts] = useState([]);
@@ -104,6 +105,29 @@ function PaginaInicial() {
 
   return (
     <div className="pagina-inicial">
+
+      {/* Hero Banner */}
+      <section className="hero-banner" style={{ backgroundImage: `url(${headerImg})` }}>
+        <div className="hero-overlay">
+          <div className="hero-content">
+            <h1 className="hero-title">BEM-VINDO À TWK</h1>
+            <p className="hero-subtitle">
+              Descubra nossa coleção exclusiva de roupas e acessórios. Cada peça é<br />
+              cuidadosamente selecionada para trazer estilo, conforto e qualidade ao seu<br />
+              guarda-roupa.
+            </p>
+            <div className="hero-buttons">
+              <button className="hero-btn hero-btn-outline" onClick={() => document.querySelector('.produtos-section')?.scrollIntoView({ behavior: 'smooth' })}>
+                EXPLORAR COLEÇÃO
+              </button>
+              <a href="https://wa.me/5511932530679" target="_blank" rel="noopener noreferrer" className="hero-btn hero-btn-filled">
+                SAIBA MAIS AGORA
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="produtos-section">
         <h2>{searchTerm ? `Resultados para: ${searchTerm}` : 'Nossos Produtos'}</h2>
         
