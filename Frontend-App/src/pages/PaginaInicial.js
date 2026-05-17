@@ -44,6 +44,7 @@ function PaginaInicial() {
             oldPrice: '323,00',
             image: process.env.PUBLIC_URL + '/imagens/camisa/twk_azul_carrosel.png',
             category: 'camiseta',
+            imageScale: 0.7,
           },
           {
             id: 4,
@@ -52,6 +53,7 @@ function PaginaInicial() {
             oldPrice: '149,90',
             image: process.env.PUBLIC_URL + '/imagens/camisa/twk_vermelha_carrosel.png',
             category: 'camiseta',
+            imageScale: 0.7,
           },
           {
             id: 5,

@@ -10,7 +10,12 @@ const ProductCard = ({ product }) => {
       <Link to={`/produto/${product.id}`} className="product-card-link">
         <div className="product-image-container">
           <span className="hover-tag">COMPRAR MAIS, PAGAR MENOS</span>
-          <img src={product.image} alt={product.name} className="product-image" />
+          <img
+            src={product.image}
+            alt={product.name}
+            className="product-image"
+            style={product.imageScale ? { transform: `scale(${product.imageScale})` } : {}}
+          />
         </div>
         <div className="product-info">
           <h3 className="product-name">{product.name.toUpperCase()}</h3>
