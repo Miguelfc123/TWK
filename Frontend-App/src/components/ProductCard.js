@@ -2,6 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
+  const priceNum = parseFloat(product.price.replace(',', '.'));
+  const installment = (priceNum / 12).toFixed(2).replace('.', ',');
+
   return (
     <div className="product-card">
       <Link to={`/produto/${product.id}`} className="product-card-link">
@@ -10,15 +13,15 @@ const ProductCard = ({ product }) => {
           <img src={product.image} alt={product.name} className="product-image" />
         </div>
         <div className="product-info">
-          <h3 className="product-name">{product.name}</h3>
+          <h3 className="product-name">{product.name.toUpperCase()}</h3>
           <div className="product-price-container">
             <span className="product-price">R${product.price}</span>
-            {product.oldPrice && (
+            {product.oldPrice && product.oldPrice !== '' && (
               <span className="product-old-price">R${product.oldPrice}</span>
             )}
           </div>
-          <p className="product-installments">12x de R${(parseFloat(product.price.replace(',', '.')) / 12).toFixed(2).replace('.', ',')}</p>
-          <button className="btn-comprar">Comprar</button>
+          <p className="product-installments">12x de R${installment}</p>
+          <button className="btn-comprar">COMPRAR</button>
         </div>
       </Link>
     </div>

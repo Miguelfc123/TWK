@@ -29,10 +29,46 @@ function PaginaInicial() {
         
         // Dados de exemplo
         setProducts([
-          { id: 1, name: 'Camiseta', price: '29,90', image: process.env.PUBLIC_URL + '/imagens/camisa/buda_carrosel.png', category: 'camiseta' },
-          { id: 2, name: 'Calça', price: '99,90', image: process.env.PUBLIC_URL + '/imagens/calca/CalçaPreta.png', category: 'calça' },
-          { id: 3, name: 'Tênis', price: '149,90', image: process.env.PUBLIC_URL + '/imagens/tenis/95Neon.png', category: 'tênis' },
-          { id: 4, name: 'Boné', price: '49,90', image: process.env.PUBLIC_URL + '/imagens/boné/boneGucciPreto.png', category: 'boné' },
+          {
+            id: 1,
+            name: 'Buda',
+            price: '75,00',
+            oldPrice: '550,00',
+            image: process.env.PUBLIC_URL + '/imagens/camisa/buda_carrosel.png',
+            category: 'camiseta',
+          },
+          {
+            id: 3,
+            name: 'More Money Azul',
+            price: '75,00',
+            oldPrice: '323,00',
+            image: process.env.PUBLIC_URL + '/imagens/camisa/twk_azul_carrosel.png',
+            category: 'camiseta',
+          },
+          {
+            id: 4,
+            name: 'More Money Vermelha',
+            price: '75,00',
+            oldPrice: '149,90',
+            image: process.env.PUBLIC_URL + '/imagens/camisa/twk_vermelha_carrosel.png',
+            category: 'camiseta',
+          },
+          {
+            id: 5,
+            name: 'Swag',
+            price: '75,00',
+            oldPrice: '149,90',
+            image: process.env.PUBLIC_URL + '/imagens/camisa/SwagCarrosel.png',
+            category: 'camiseta',
+          },
+          {
+            id: 6,
+            name: 'TheEyes',
+            price: '75,00',
+            oldPrice: '',
+            image: process.env.PUBLIC_URL + '/imagens/camisa/theEyesCarrosel.png',
+            category: 'camiseta',
+          },
         ]);
       } catch (error) {
         console.error('Erro ao carregar produtos:', error);

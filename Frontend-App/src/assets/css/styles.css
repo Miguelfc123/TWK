@@ -234,6 +234,7 @@ h1, h2, h3, h4, h5, h6 {
   gap: 20px;
   max-width: 1400px;
   margin: 0 auto;
+  padding: 0 40px;
 }
 
 
@@ -242,31 +243,33 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease;
-  width: 280px;
-  height: auto; /* Let it expand to fit content, as 380px is too small for image+button */
-  background-color: #111;
+  background-color: #000;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #333;
+  border: 1px solid #222;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  border-color: #444;
 }
 
 .product-image-container {
   position: relative;
-  background-color: transparent;
-  width: 280px;
-  height: 320px;
+  background-color: #000;
+  width: 100%;
+  aspect-ratio: 1/1;
   overflow: hidden;
-  margin-bottom: 0; /* Remove margin as card has background now */
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #1a1a1a;
 }
 
 .product-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -294,7 +297,8 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 15px;
+  padding: 16px 12px;
+  background: #000;
 }
 
 .product-name {
@@ -870,6 +874,45 @@ h1, h2, h3, h4, h5, h6 {
   .product-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ===================== PRODUTOS SECTION ===================== */
+.pagina-inicial {
+  background: #000;
+  min-height: 100vh;
+}
+
+.produtos-section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px 40px;
+}
+
+.produtos-section h2 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .produtos-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .produtos-grid { grid-template-columns: repeat(2, 1fr); }
+  .produtos-section { padding: 40px 20px; }
+}
+@media (max-width: 480px) {
+  .produtos-grid { grid-template-columns: 1fr; }
 }
 
 /* ===================== MIX & MATCH (OUTFIT BUILDER) ===================== */
