@@ -77,9 +77,6 @@ function MixMatch() {
     }));
   };
 
-  const selectedItems = categories.map(cat => cat.items[indices[cat.id]]);
-  const totalPrice = selectedItems.reduce((sum, item) => sum + item.price, 0);
-
   return (
     <div className="mix-match-container">
       <h2 className="mix-match-title">Monte seu kit</h2>
