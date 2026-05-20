@@ -91,7 +91,9 @@ function MixMatch() {
                 src={cat.items[indices[cat.id]].img}
                 alt={cat.items[indices[cat.id]].name}
                 style={{
-                  transform: `scale(${cat.items[indices[cat.id]].scale || 1}) translate(${cat.items[indices[cat.id]].translateX || 0}px, ${cat.items[indices[cat.id]].translateY || 0}px)`
+                  transform: `scale(${cat.items[indices[cat.id]].scale || 1}) translate(${cat.items[indices[cat.id]].translateX || 0}px, ${cat.items[indices[cat.id]].translateY || 0}px) translateZ(0)`,
+                  WebkitBackfaceVisibility: 'hidden',
+                  backfaceVisibility: 'hidden'
                 }}
               />
             </div>
