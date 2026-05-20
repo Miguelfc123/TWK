@@ -80,21 +80,6 @@ function MixMatch() {
   const selectedItems = categories.map(cat => cat.items[indices[cat.id]]);
   const totalPrice = selectedItems.reduce((sum, item) => sum + item.price, 0);
 
-  const handleBuy = () => {
-    const numeroWhatsApp = "5511932530679";
-    const itemsList = selectedItems.map(item => `- ${item.name}`).join('\n');
-    const textoMensagem = `Olá! Montei esse look no Mix & Match e gostaria de comprar:
-
-${itemsList}
-
-*Total:* R$ ${totalPrice.toFixed(2).replace('.', ',')}
-
-Gostaria de prosseguir com o pagamento.`;
-
-    const textoCodificado = encodeURIComponent(textoMensagem);
-    window.open(`https://wa.me/${numeroWhatsApp}?text=${textoCodificado}`, '_blank');
-  };
-
   return (
     <div className="mix-match-container">
       <h2 className="mix-match-title">Monte seu kit</h2>
@@ -118,11 +103,6 @@ Gostaria de prosseguir com o pagamento.`;
             </button>
           </div>
         ))}
-      </div>
-      <div className="mix-match-footer" style={{ textAlign: 'center', marginTop: '30px', paddingBottom: '20px' }}>
-        <button className="btn-comprar-black" onClick={handleBuy} style={{ padding: '15px 30px', fontSize: '16px', cursor: 'pointer', background: '#000', color: '#fff', border: 'none', borderRadius: '4px', textTransform: 'uppercase', fontWeight: 'bold' }}>
-          Comprar Look (R$ {totalPrice.toFixed(2).replace('.', ',')})
-        </button>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -60,7 +61,12 @@ const Header = () => {
         </div>
 
         <div className="logo-center">
-          <Link to="/">
+          <Link 
+            to="/"
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
             <img 
               src="/logo.transp.png" 
               alt="FIOTI Logo" 
@@ -70,15 +76,25 @@ const Header = () => {
         </div>
         
         <div className="header-actions">
-          <form className="search-bar" onSubmit={handleSearch}>
+          <form className={`search-bar ${searchOpen ? 'open' : ''}`} onSubmit={handleSearch}>
             <input 
+              id="header-search-input"
               type="text" 
               placeholder="O que você está buscando?" 
               value={searchTerm}
               onChange={handleChange}
               onKeyDown={handleKeyDown}
+              onFocus={() => setSearchOpen(true)}
+              onBlur={() => { if(!searchTerm) setSearchOpen(false) }}
             />
-            <button type="submit" className="search-btn">
+            <button 
+              type={searchOpen && searchTerm ? "submit" : "button"} 
+              className="search-btn" 
+              onClick={() => {
+                setSearchOpen(true);
+                document.getElementById('header-search-input')?.focus();
+              }}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
               </svg>

@@ -8,6 +8,7 @@ function PaginaInicial() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [historico, setHistorico] = useState([]);
+  const [mostrarHistorico, setMostrarHistorico] = useState(true);
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get('search');
 
@@ -120,9 +121,6 @@ function PaginaInicial() {
               <button className="hero-btn hero-btn-outline" onClick={() => document.querySelector('.produtos-section')?.scrollIntoView({ behavior: 'smooth' })}>
                 EXPLORAR COLEÇÃO
               </button>
-              <a href="https://wa.me/5511932530679" target="_blank" rel="noopener noreferrer" className="hero-btn hero-btn-filled">
-                SAIBA MAIS AGORA
-              </a>
             </div>
           </div>
         </div>
@@ -144,9 +142,30 @@ function PaginaInicial() {
 
       <MixMatch />
       
-      {historico.length > 0 && (
+      {mostrarHistorico && historico.length > 0 && (
         <div className="floating-historico">
-          <div className="historico-header">RECENTEMENTE VISTOS</div>
+          <div className="historico-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span>RECENTEMENTE VISTOS</span>
+            <button 
+              onClick={(e) => { e.stopPropagation(); setMostrarHistorico(false); }} 
+              style={{ 
+                background: '#333', 
+                border: 'none', 
+                borderRadius: '50%', 
+                width: '22px', 
+                height: '22px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                fontSize: '14px', 
+                color: '#fff', 
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              &times;
+            </button>
+          </div>
           {historico.map((item, index) => (
             <div key={index} className="historico-item">
               <div className="hist-img" style={{ width: '60px', height: '80px', minWidth: '60px' }}>
