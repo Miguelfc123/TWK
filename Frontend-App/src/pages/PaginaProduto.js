@@ -94,25 +94,45 @@ function PaginaProduto() {
     try {
       const cleanCep = cep.replace(/\D/g, '');
 
-      // Nova API de frete local (localhost:3001)
-      const apiUrl = process.env.REACT_APP_FREIGHT_API_URL || 'http://localhost:3001';
-      const response = await fetch(`${apiUrl}/frete?cep=${cleanCep}`);
+      // Consumindo a API pública do ViaCEP para obter a localidade (funciona nativamente no Vercel)
+      const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
       const data = await response.json();
 
-      if (!data.sucesso) {
-        setErroFrete(data.erro || 'CEP não encontrado.');
+      if (data.erro) {
+        setErroFrete('CEP não encontrado. Verifique e tente novamente.');
         setCalculandoFrete(false);
         return;
       }
 
-      const localTexto = `${data.destino.cidade} - ${data.destino.uf}`;
+      const localTexto = `${data.localidade} - ${data.uf}`;
 
-      const novasOpcoes = data.opcoes.map((opcao) => ({
-        tipo: opcao.servico,
-        valor: opcao.preco,
-        prazo: opcao.prazo_dias_uteis,
-        local: localTexto,
-      }));
+      // Simulando valores baseados no estado (Já que a API oficial dos Correios bloqueia acesso direto do navegador por CORS)
+      let valorPac = 15.90;
+      let prazoPac = 5;
+      let valorSedex = 35.90;
+      let prazoSedex = 2;
+
+      if (data.uf === 'SP') {
+        valorPac = 9.90;
+        prazoPac = 3;
+        valorSedex = 19.90;
+        prazoSedex = 1;
+      } else if (['RJ', 'MG', 'PR', 'SC', 'RS'].includes(data.uf)) {
+        valorPac = 18.90;
+        prazoPac = 7;
+        valorSedex = 42.90;
+        prazoSedex = 3;
+      } else {
+        valorPac = 28.90;
+        prazoPac = 12;
+        valorSedex = 65.90;
+        prazoSedex = 5;
+      }
+
+      const novasOpcoes = [
+        { tipo: 'Correios PAC', valor: valorPac, prazo: prazoPac, local: localTexto },
+        { tipo: 'Correios SEDEX', valor: valorSedex, prazo: prazoSedex, local: localTexto }
+      ];
 
       setOpcoesFrete(novasOpcoes);
       setFreteSelecionado(novasOpcoes[0]);
