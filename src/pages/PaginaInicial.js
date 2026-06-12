@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import ProductCard from '../components/ProductCard';
 import MixMatch from '../components/MixMatch';
 import headerImg from '../assets/images/header.png';
 
 function PaginaInicial() {
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [historico, setHistorico] = useState([]);
   const [mostrarHistorico, setMostrarHistorico] = useState(true);
-  const [searchParams] = useSearchParams();
   const [countdown, setCountdown] = useState({
     dias: 0,
     horas: 0,
     minutos: 0,
     segundos: 0
   });
-  const searchTerm = searchParams.get('search');
 
   const formatarTempo = (isoString) => {
     const diff = (new Date() - new Date(isoString)) / 1000;
@@ -118,18 +113,6 @@ function PaginaInicial() {
     const intervalId = setInterval(calcularCountdown, 1000);
     return () => clearInterval(intervalId);
   }, []);
-
-  useEffect(() => {
-    if (searchTerm) {
-      const filtered = products.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredProducts(filtered);
-    } else {
-      setFilteredProducts(products);
-    }
-  }, [searchTerm, products]);
 
   return (
     <div className="pagina-inicial">
