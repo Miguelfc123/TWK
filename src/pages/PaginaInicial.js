@@ -3,7 +3,6 @@ import MixMatch from '../components/MixMatch';
 import headerImg from '../assets/images/header.png';
 
 function PaginaInicial() {
-  const [products, setProducts] = useState([]);
   const [historico, setHistorico] = useState([]);
   const [mostrarHistorico, setMostrarHistorico] = useState(true);
   const [countdown, setCountdown] = useState({
@@ -37,66 +36,6 @@ function PaginaInicial() {
   };
 
   useEffect(() => {
-    // Carregue os produtos aqui (você pode usar uma API ou dados locais)
-    const loadProducts = async () => {
-      try {
-        // Substitua isso pela sua fonte de dados real
-        // const response = await fetch('/api/products');
-        // const data = await response.json();
-        // setProducts(data);
-        
-        // Dados de exemplo
-        setProducts([
-          {
-            id: 1,
-            name: 'Buda',
-            price: '75,00',
-            oldPrice: '100,00',
-            image: process.env.PUBLIC_URL + '/imagens/camisa/buda_carrosel.png',
-            category: 'camiseta',
-          },
-          {
-            id: 3,
-            name: 'More Money Azul',
-            price: '75,00',
-            oldPrice: '100,00',
-            image: process.env.PUBLIC_URL + '/imagens/camisa/twk_azul_carrosel.png',
-            category: 'camiseta',
-            imageScale: 0.7,
-          },
-          {
-            id: 4,
-            name: 'More Money Vermelha',
-            price: '75,00',
-            oldPrice: '100,00',
-            image: process.env.PUBLIC_URL + '/imagens/camisa/twk_vermelha_carrosel.png',
-            category: 'camiseta',
-            imageScale: 0.7,
-          },
-          {
-            id: 5,
-            name: 'Swag',
-            price: '75,00',
-            oldPrice: '100,00',
-            image: process.env.PUBLIC_URL + '/imagens/camisa/SwagCarrosel.png',
-            category: 'camiseta',
-          },
-          {
-            id: 6,
-            name: 'TheEyes',
-            price: '75,00',
-            oldPrice: '',
-            image: process.env.PUBLIC_URL + '/imagens/camisa/theEyesCarrosel.png',
-            category: 'camiseta',
-          },
-        ]);
-      } catch (error) {
-        console.error('Erro ao carregar produtos:', error);
-      }
-    };
-
-    loadProducts();
-
     const loadHistory = () => {
       const visited = JSON.parse(localStorage.getItem('visitedProducts')) || [];
       setHistorico(visited.slice(0, 2));
