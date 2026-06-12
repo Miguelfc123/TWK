@@ -10,6 +10,12 @@ function PaginaInicial() {
   const [historico, setHistorico] = useState([]);
   const [mostrarHistorico, setMostrarHistorico] = useState(true);
   const [searchParams] = useSearchParams();
+  const [countdown, setCountdown] = useState({
+    dias: 0,
+    horas: 0,
+    minutos: 0,
+    segundos: 0
+  });
   const searchTerm = searchParams.get('search');
 
   const formatarTempo = (isoString) => {
@@ -18,6 +24,21 @@ function PaginaInicial() {
     if (diff < 3600) return `Há ${Math.floor(diff / 60)} minuto(s)`;
     if (diff < 86400) return `Há ${Math.floor(diff / 3600)} hora(s)`;
     return `Há ${Math.floor(diff / 86400)} dia(s)`;
+  };
+
+  const calcularCountdown = () => {
+    const dataAlvo = new Date('2026-07-07T00:00:00').getTime();
+    const agora = new Date().getTime();
+    const diferenca = dataAlvo - agora;
+
+    if (diferenca > 0) {
+      const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+      const horas = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
+      const segundos = Math.floor((diferenca % (1000 * 60)) / 1000);
+
+      setCountdown({ dias, horas, minutos, segundos });
+    }
   };
 
   useEffect(() => {
@@ -93,6 +114,12 @@ function PaginaInicial() {
   }, []);
 
   useEffect(() => {
+    calcularCountdown();
+    const intervalId = setInterval(calcularCountdown, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
     if (searchTerm) {
       const filtered = products.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -113,32 +140,41 @@ function PaginaInicial() {
           <div className="hero-content">
             <h1 className="hero-title">BEM-VINDO À TWK</h1>
             <p className="hero-subtitle">
-              Descubra nossa coleção exclusiva de roupas e acessórios. Cada peça é<br />
-              cuidadosamente selecionada para trazer estilo, conforto e qualidade ao seu<br />
-              guarda-roupa.
+              O primeiro drop da TWK está chegando rpzd. <br />
+              Fique atento à contagem regressiva pro lançamento da TWK.
             </p>
             <div className="hero-buttons">
-              <button className="hero-btn hero-btn-outline" onClick={() => document.querySelector('.produtos-section')?.scrollIntoView({ behavior: 'smooth' })}>
-                EXPLORAR COLEÇÃO
+              <button className="hero-btn hero-btn-outline" onClick={() => document.querySelector('.mix-match-container')?.scrollIntoView({ behavior: 'smooth' })}>
+                MONTE SEU KIT
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="produtos-section">
-        <h2>{searchTerm ? `Resultados para: ${searchTerm}` : 'Nossos Produtos'}</h2>
-        
-        <div className="produtos-grid">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))
-          ) : (
-            <p>Nenhum produto encontrado.</p>
-          )}
+      <section className="countdown-section">
+        <div className="countdown-container">
+          <h2>CONTAGEM REGRESSIVA PARA 07/07/26</h2>
+          <div className="countdown-display">
+            <div className="countdown-item">
+              <span className="countdown-number">{countdown.dias}</span>
+              <span className="countdown-label">DIAS</span>
+            </div>
+            <div className="countdown-item">
+              <span className="countdown-number">{countdown.horas}</span>
+              <span className="countdown-label">HORAS</span>
+            </div>
+            <div className="countdown-item">
+              <span className="countdown-number">{countdown.minutos}</span>
+              <span className="countdown-label">MINUTOS</span>
+            </div>
+            <div className="countdown-item">
+              <span className="countdown-number">{countdown.segundos}</span>
+              <span className="countdown-label">SEGUNDOS</span>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
       <MixMatch />
       

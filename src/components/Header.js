@@ -112,8 +112,6 @@ const Header = () => {
       <nav className="main-nav-centered">
         <ul>
           <li><Link to="/">HOME</Link></li>
-          <li><a href="https://wa.me/5511932530679?text=Ol%C3%A1%21%20Gostaria%20de%20falar%20com%20o%20suporte.%20Preciso%20de%20ajuda%20com%20um%20pedido%20ou%20tirar%20uma%20d%C3%BAvida." target="_blank" rel="noopener noreferrer">CONTATO E SUPORTE</a></li>
-          <li><a href="https://wa.me/5511932530679?text=Ol%C3%A1%21%20Gostaria%20de%20solicitar%20uma%20troca%20ou%20devolu%C3%A7%C3%A3o%20de%20um%20pedido." target="_blank" rel="noopener noreferrer">TROCA E DEVOLUÇÃO</a></li>
           <li><a href="https://www.instagram.com/twk.club/" target="_blank" rel="noopener noreferrer">INSTAGRAM</a></li>
         </ul>
       </nav>
