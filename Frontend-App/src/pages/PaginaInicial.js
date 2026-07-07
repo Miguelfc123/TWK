@@ -68,6 +68,7 @@ function PaginaInicial() {
             image: process.env.PUBLIC_URL + '/imagens/camisa/theEyesCarrosel.png',
             hoverImage: process.env.PUBLIC_URL + '/Cards/theeyes-hover.jpg',
             category: 'camiseta',
+            imageScale: 0.8,
           },
         ]);
       } catch (error) {
