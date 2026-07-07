@@ -6,11 +6,11 @@ import headerBg from '../assets/images/header.png';
 
 // ── Produtos da seção principal ───────────────────────────────────
 const produtosIniciais = [
-  { id: 1, name: 'buda',                price: '75,00', oldPrice: '550,00', image: '/buda.png',                status: 'COMPRAR MAIS, PAGAR MENOS' },
-  { id: 3, name: 'more money azul',     price: '75,00', oldPrice: '323,00', image: '/more money azul.png',     status: 'COMPRAR MAIS, PAGAR MENOS' },
-  { id: 4, name: 'more money vermelha', price: '75,00', oldPrice: '149,90', image: '/more money vermelha.png', status: 'COMPRAR MAIS, PAGAR MENOS' },
-  { id: 5, name: 'swag',                price: '75,00', oldPrice: '149,90', image: '/swag.PNG',                status: 'COMPRAR MAIS, PAGAR MENOS' },
-  { id: 6, name: 'TheEyes',             price: '75,00', oldPrice: '',       image: '/TheEyes.png',             status: 'COMPRAR MAIS, PAGAR MENOS' },
+  { id: 1, name: 'buda',                price: '75,00', oldPrice: '550,00', image: '/Cards/BudaCard.JPG',                status: 'COMPRAR MAIS, PAGAR MENOS' },
+  { id: 3, name: 'more money azul',     price: '75,00', oldPrice: '323,00', image: '/Cards/TWkazulCard.jpg',     status: 'COMPRAR MAIS, PAGAR MENOS' },
+  { id: 4, name: 'more money vermelha', price: '75,00', oldPrice: '149,90', image: '/Cards/TWkVermCard.jpg', status: 'COMPRAR MAIS, PAGAR MENOS' },
+  { id: 5, name: 'swag',                price: '75,00', oldPrice: '149,90', image: '/Cards/SwagCard.JPG',                status: 'COMPRAR MAIS, PAGAR MENOS' },
+  { id: 6, name: 'TheEyes',             price: '75,00', oldPrice: '',       image: '/Cards/theEyesCard.JPG',             status: 'COMPRAR MAIS, PAGAR MENOS' },
 ];
 
 // ── Página principal ───────────────────────────────────────────────

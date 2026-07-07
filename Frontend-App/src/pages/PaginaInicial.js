@@ -7,18 +7,8 @@ import headerImg from '../assets/images/header.png';
 function PaginaInicial() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [historico, setHistorico] = useState([]);
-  const [mostrarHistorico, setMostrarHistorico] = useState(true);
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get('search');
-
-  const formatarTempo = (isoString) => {
-    const diff = (new Date() - new Date(isoString)) / 1000;
-    if (diff < 60) return "Agora mesmo";
-    if (diff < 3600) return `Há ${Math.floor(diff / 60)} minuto(s)`;
-    if (diff < 86400) return `Há ${Math.floor(diff / 3600)} hora(s)`;
-    return `Há ${Math.floor(diff / 86400)} dia(s)`;
-  };
 
   useEffect(() => {
     // Carregue os produtos aqui (você pode usar uma API ou dados locais)
@@ -37,6 +27,7 @@ function PaginaInicial() {
             price: '75,00',
             oldPrice: '100,00',
             image: process.env.PUBLIC_URL + '/imagens/camisa/buda_carrosel.png',
+            hoverImage: process.env.PUBLIC_URL + '/Cards/buda-hover.jpg',
             category: 'camiseta',
           },
           {
@@ -45,6 +36,7 @@ function PaginaInicial() {
             price: '75,00',
             oldPrice: '100,00',
             image: process.env.PUBLIC_URL + '/imagens/camisa/twk_azul_carrosel.png',
+            hoverImage: process.env.PUBLIC_URL + '/Cards/more-money-azul-hover.jpg',
             category: 'camiseta',
             imageScale: 0.7,
           },
@@ -54,6 +46,7 @@ function PaginaInicial() {
             price: '75,00',
             oldPrice: '100,00',
             image: process.env.PUBLIC_URL + '/imagens/camisa/twk_vermelha_carrosel.png',
+            hoverImage: process.env.PUBLIC_URL + '/Cards/more-money-vermelha-hover.jpg',
             category: 'camiseta',
             imageScale: 0.7,
           },
@@ -63,7 +56,9 @@ function PaginaInicial() {
             price: '75,00',
             oldPrice: '100,00',
             image: process.env.PUBLIC_URL + '/imagens/camisa/SwagCarrosel.png',
+            hoverImage: process.env.PUBLIC_URL + '/Cards/swag-hover.jpg',
             category: 'camiseta',
+            imageScale: 0.75,
           },
           {
             id: 6,
@@ -71,6 +66,7 @@ function PaginaInicial() {
             price: '75,00',
             oldPrice: '',
             image: process.env.PUBLIC_URL + '/imagens/camisa/theEyesCarrosel.png',
+            hoverImage: process.env.PUBLIC_URL + '/Cards/theeyes-hover.jpg',
             category: 'camiseta',
           },
         ]);
@@ -80,16 +76,6 @@ function PaginaInicial() {
     };
 
     loadProducts();
-
-    const loadHistory = () => {
-      const visited = JSON.parse(localStorage.getItem('visitedProducts')) || [];
-      setHistorico(visited.slice(0, 2));
-    };
-    
-    loadHistory();
-    // Atualizar tempo a cada minuto
-    const intervalId = setInterval(loadHistory, 60000);
-    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -141,45 +127,6 @@ function PaginaInicial() {
       </div>
 
       <MixMatch />
-      
-      {mostrarHistorico && historico.length > 0 && (
-        <div className="floating-historico">
-          <div className="historico-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span>RECENTEMENTE VISTOS</span>
-            <button 
-              onClick={(e) => { e.stopPropagation(); setMostrarHistorico(false); }} 
-              style={{ 
-                background: '#333', 
-                border: 'none', 
-                borderRadius: '50%', 
-                width: '22px', 
-                height: '22px', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                fontSize: '14px', 
-                color: '#fff', 
-                cursor: 'pointer',
-                fontWeight: 'bold'
-              }}
-            >
-              &times;
-            </button>
-          </div>
-          {historico.map((item, index) => (
-            <div key={index} className="historico-item">
-              <div className="hist-img" style={{ width: '60px', height: '80px', minWidth: '60px' }}>
-                <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-              </div>
-              <div className="hist-info">
-                <span className="hist-price">R$ {item.price}</span>
-                <span className="hist-name">{item.name.substring(0, 20)}{item.name.length > 20 ? '...' : ''}</span>
-                <span className="hist-time">{formatarTempo(item.visitedAt)}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

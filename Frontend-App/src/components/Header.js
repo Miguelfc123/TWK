@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
+  const scrolledRef = useRef(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -16,24 +17,32 @@ const Header = () => {
   }, [location.search]);
 
   useEffect(() => {
-    let lastScrollY = 0;
-
+    let lastSetScrolledAt = 0;
+    const debounceDelay = 200; // Menos sensível
+    
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const now = Date.now();
       
-      // Hysteresis: evita que o header pisque quando o scroll está próximo do threshold
-      if (currentScrollY > 80 && !scrolled) {
-        setScrolled(true);
-      } else if (currentScrollY < 30 && scrolled) {
-        setScrolled(false);
+      // Só permite mudança de estado a cada 200ms
+      if (now - lastSetScrolledAt < debounceDelay) {
+        return;
       }
       
-      lastScrollY = currentScrollY;
+      if (currentScrollY > 150 && !scrolledRef.current) {
+        scrolledRef.current = true;
+        setScrolled(true);
+        lastSetScrolledAt = now;
+      } else if (currentScrollY < 50 && scrolledRef.current) {
+        scrolledRef.current = false;
+        setScrolled(false);
+        lastSetScrolledAt = now;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);
+  }, []);
 
   const handleSearch = (e) => {
     if (e) e.preventDefault();

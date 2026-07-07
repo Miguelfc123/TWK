@@ -17,11 +17,11 @@ const categories = [
     name: 'Camisa',
     items: [
       { id: 1, name: 'Camisa Buda', img: process.env.PUBLIC_URL + '/imagens/camisa/buda_carrosel.png', price: 75, scale: 1.4 },
-      { id: 5, name: 'Camisa Swag', img: process.env.PUBLIC_URL + '/imagens/camisa/SwagCarrosel.png', price: 75, scale: 1.4, translateY: -15, translateX: 0 },
+      { id: 3, name: 'Camisa TWK Azul', img: process.env.PUBLIC_URL + '/imagens/camisa/twk_azul_carrosel.png', price: 75, scale: 1.0 },
+      { id: 4, name: 'Camisa TWK Vermelha', img: process.env.PUBLIC_URL + '/imagens/camisa/twk_vermelha_carrosel.png', price: 75, scale: 1.0 },
+      { id: 5, name: 'Camisa Swag', img: process.env.PUBLIC_URL + '/imagens/camisa/SwagCarrosel.png', price: 75, scale: 1.4, translateY: -15 },
       { id: 6, name: 'Camisa TheEyes', img: process.env.PUBLIC_URL + '/imagens/camisa/theEyesCarrosel.png', price: 75, scale: 1.4 },
-      { id: 3, name: 'Camisa TWK Azul', img: process.env.PUBLIC_URL + '/imagens/camisa/twk_azul_carrosel.png', price: 75, scale: 1.1 },
-      { id: 4, name: 'Camisa TWK Vermelha', img: process.env.PUBLIC_URL + '/imagens/camisa/twk_vermelha_carrosel.png', price: 75, scale: 1.1 },
-      { id: 7, name: 'Blusa Preta', img: process.env.PUBLIC_URL + '/imagens/camisa/blusaPreta.png', price: 180, scale: 0.9, translateY: -20 },
+      { id: 7, name: 'Blusa Preta', img: process.env.PUBLIC_URL + '/imagens/camisa/blusaPreta.png', price: 180, scale: 0.8, translateY: -20 },
     ]
   },
   {
