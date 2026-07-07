@@ -8,12 +8,18 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método não permitido. Use POST.' });
   }
 
-  const MELHOR_ENVIO_TOKEN = process.env.MELHOR_ENVIO_TOKEN;
+  const MELHOR_ENVIO_TOKEN = process.env.MELHOR_ENVIO_TOKEN
+    || process.env.MELHOR_ENVIO_ACCESS_TOKEN
+    || process.env.MELHOR_ENVIO_API_TOKEN
+    || process.env.REACT_APP_MELHOR_ENVIO_TOKEN;
   const CEP_ORIGEM = process.env.CEP_ORIGEM || '04752005';
 
   if (!MELHOR_ENVIO_TOKEN) {
-    console.error('MELHOR_ENVIO_TOKEN não configurado nas variáveis de ambiente');
-    return res.status(500).json({ error: 'Configuração do servidor incompleta. Token não encontrado.' });
+    console.error('Nenhuma variável de token do Melhor Envio encontrada nas variáveis de ambiente');
+    return res.status(500).json({
+      error: 'Configuração do servidor incompleta. Token do Melhor Envio não encontrado.',
+      hint: 'Adicione MELHOR_ENVIO_TOKEN ou MELHOR_ENVIO_ACCESS_TOKEN nas variáveis de ambiente do Vercel.'
+    });
   }
 
   const { cep_destino, produtos } = req.body;
