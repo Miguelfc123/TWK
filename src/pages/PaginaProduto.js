@@ -10,6 +10,10 @@ const produtosIniciais = [
     price: '75,00',
     oldPrice: '100,00',
     image: process.env.PUBLIC_URL + '/buda.png',
+    cardImage: process.env.PUBLIC_URL + '/Cards/buda-hover.jpg',
+    extraImages: [
+      process.env.PUBLIC_URL + '/Cards/buda2.JPG',
+    ],
     status: '-47%',
     category: 'Início > Buda >',
   },
@@ -19,6 +23,11 @@ const produtosIniciais = [
     price: '75,00',
     oldPrice: '100,00',
     image: process.env.PUBLIC_URL + '/more money azul.png',
+    cardImage: process.env.PUBLIC_URL + '/Cards/more-money-azul-hover.jpg',
+    extraImages: [
+      process.env.PUBLIC_URL + '/Cards/moremoney2.JPG',
+      process.env.PUBLIC_URL + '/Cards/moremoney-azul-3.jpg',
+    ],
     status: 'COMPRAR MAIS, PAGAR MENOS',
     category: 'Início > More Money >',
   },
@@ -28,6 +37,11 @@ const produtosIniciais = [
     price: '75,00',
     oldPrice: '100,00',
     image: process.env.PUBLIC_URL + '/more money vermelha.png',
+    cardImage: process.env.PUBLIC_URL + '/Cards/more-money-vermelha-hover.jpg',
+    extraImages: [
+      process.env.PUBLIC_URL + '/Cards/moremoneyverm3.jpg',
+      process.env.PUBLIC_URL + '/Cards/moremoneyverm4.jpg',
+    ],
     status: 'COMPRAR MAIS, PAGAR MENOS',
     category: 'Início > More Money >',
   },
@@ -36,9 +50,16 @@ const produtosIniciais = [
     name: 'swag',
     price: '75,00',
     oldPrice: '100,00',
-    image: process.env.PUBLIC_URL + '/swag.PNG',
+    image: process.env.PUBLIC_URL + '/imagens/camisa/SwagCarrosel.png',
+    cardImage: process.env.PUBLIC_URL + '/Cards/swag-hover.jpg',
+    imageScale: 0.75,
+    extraImages: [
+      process.env.PUBLIC_URL + '/Cards/ronaldinho1.JPG',
+      process.env.PUBLIC_URL + '/Cards/ronaldinho2.JPG',
+    ],
     status: 'COMPRAR MAIS, PAGAR MENOS',
     category: 'Início > Swag >',
+    dimensions: { width: 15, height: 10, length: 20, weight: 0.5 }
   },
   {
     id: 6,
@@ -46,9 +67,15 @@ const produtosIniciais = [
     price: '75,00',
     oldPrice: '',
     image: process.env.PUBLIC_URL + '/TheEyes.png',
+    cardImage: process.env.PUBLIC_URL + '/Cards/theeyes-hover.jpg',
+    extraImages: [
+      process.env.PUBLIC_URL + '/Cards/theeyes2.JPG',
+      process.env.PUBLIC_URL + '/Cards/theeyes3.JPG',
+    ],
     status: 'COMPRAR MAIS, PAGAR MENOS',
     category: 'Início > TheEyes >',
-  }
+  },
+
 ];
 
 function PaginaProduto() {
@@ -95,45 +122,68 @@ function PaginaProduto() {
     try {
       const cleanCep = cep.replace(/\D/g, '');
 
-      // Consumindo a API pública do ViaCEP para obter a localidade (funciona nativamente no Vercel)
-      const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
+      // Definir peso com base no tamanho selecionado
+      let pesoProduto = 0.5; // M ou padrão (500g)
+      if (tamanhoSelecionado === 'P') pesoProduto = 0.4; // 400g
+      if (tamanhoSelecionado === 'G') pesoProduto = 0.6; // 600g
+
+      // Chamar a serverless function que consulta a API real do Melhor Envio
+      const response = await fetch('/api/frete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          cep_destino: cleanCep,
+          produtos: [
+            {
+              id: String(produto.id),
+              width: 20,
+              height: 4,
+              length: 25,
+              weight: pesoProduto,
+              insurance_value: parseFloat(produto.price.replace(',', '.')),
+              quantity: quantidade
+            }
+          ]
+        })
+      });
+
       const data = await response.json();
 
-      if (data.erro) {
-        setErroFrete('CEP não encontrado. Verifique e tente novamente.');
+      if (!response.ok || !data.success) {
+        setErroFrete(data.error || 'Erro ao calcular frete. Tente novamente.');
         setCalculandoFrete(false);
         return;
       }
 
-      const localTexto = `${data.localidade} - ${data.uf}`;
-
-      // Simulando valores baseados no estado (Já que a API oficial dos Correios bloqueia acesso direto do navegador por CORS)
-      let valorPac = 15.90;
-      let prazoPac = 5;
-      let valorSedex = 35.90;
-      let prazoSedex = 2;
-
-      if (data.uf === 'SP') {
-        valorPac = 9.90;
-        prazoPac = 3;
-        valorSedex = 19.90;
-        prazoSedex = 1;
-      } else if (['RJ', 'MG', 'PR', 'SC', 'RS'].includes(data.uf)) {
-        valorPac = 18.90;
-        prazoPac = 7;
-        valorSedex = 42.90;
-        prazoSedex = 3;
-      } else {
-        valorPac = 28.90;
-        prazoPac = 12;
-        valorSedex = 65.90;
-        prazoSedex = 5;
+      if (data.servicos.length === 0) {
+        setErroFrete('Nenhuma opção de envio disponível para este CEP.');
+        setCalculandoFrete(false);
+        return;
       }
 
-      const novasOpcoes = [
-        { tipo: 'Correios PAC', valor: valorPac, prazo: prazoPac, local: localTexto },
-        { tipo: 'Correios SEDEX', valor: valorSedex, prazo: prazoSedex, local: localTexto }
-      ];
+      // Buscar o nome da cidade via ViaCEP para exibição
+      let localTexto = '';
+      try {
+        const viaCepResp = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
+        const viaCepData = await viaCepResp.json();
+        if (!viaCepData.erro) {
+          localTexto = `${viaCepData.localidade} - ${viaCepData.uf}`;
+        }
+      } catch (e) {
+        // Sem problema se falhar, apenas não mostra a localidade
+      }
+
+      const novasOpcoes = data.servicos.map(servico => ({
+        tipo: servico.tipo,
+        empresa: servico.empresa,
+        logo: servico.logo,
+        valor: servico.preco,
+        prazo: servico.prazoMax,
+        prazoMin: servico.prazoMin,
+        local: localTexto
+      }));
 
       setOpcoesFrete(novasOpcoes);
       setFreteSelecionado(novasOpcoes[0]);
@@ -176,6 +226,16 @@ Gostaria de prosseguir com o pagamento.`;
     window.open(`https://wa.me/${numeroWhatsApp}?text=${textoCodificado}`, '_blank');
   };
 
+  const [imagemSelecionada, setImagemSelecionada] = useState(null);
+
+  useEffect(() => {
+    if (produto) {
+      setImagemSelecionada(produto.image);
+    }
+  }, [produto]);
+
+  const galeria = produto ? [produto.image, ...(produto.cardImage ? [produto.cardImage] : []), ...(produto.extraImages || [])] : [];
+
   if (loading || !produto) {
     return <div className="loading">Carregando...</div>;
   }
@@ -187,17 +247,20 @@ Gostaria de prosseguir com o pagamento.`;
         {/* Imagens do Produto (Esquerda) */}
         <div className="produto-galeria">
           <div className="miniaturas">
-            <img src={produto.image} alt="Thumb 1" className="miniatura ativa" />
-            <img src={produto.image} alt="Thumb 2" className="miniatura" />
-            <img src={produto.image} alt="Thumb 3" className="miniatura" />
-            <div className="scroll-arrows">
-              <button>&#708;</button>
-              <button>&#709;</button>
-            </div>
+            {galeria.map((img, index) => (
+              <img 
+                key={index}
+                src={img} 
+                alt={`Thumb ${index + 1}`} 
+                className={`miniatura${imagemSelecionada === img ? ' ativa' : ''}`}
+                onClick={() => setImagemSelecionada(img)}
+                style={{ cursor: 'pointer' }}
+              />
+            ))}
           </div>
           <div className="imagem-principal">
             <span className="badge-desconto">{produto.status}</span>
-            <img src={produto.image} alt={produto.name} />
+            <img src={imagemSelecionada || produto.image} alt={produto.name} />
           </div>
         </div>
 
@@ -214,14 +277,13 @@ Gostaria de prosseguir com o pagamento.`;
             {produto.oldPrice && <span className="preco-antigo">R${produto.oldPrice}</span>}
           </div>
           
-          <p className="produto-parcelamento">12x de R$30,52</p>
           <p className="combinado-aviso">Pode ser combinado com qualquer produto da loja.</p>
 
           {/* Seletor de Tamanho */}
           <div className="produto-tamanhos">
             <span className="tamanho-label">Tamanho</span>
             <div className="tamanhos-grid">
-              {['PP', 'P', 'M', 'G', 'GG'].map(size => (
+              {['P', 'M', 'G'].map(size => (
                 <button 
                   key={size} 
                   className={`btn-tamanho ${tamanhoSelecionado === size ? 'selecionado' : ''}`}
@@ -269,26 +331,38 @@ Gostaria de prosseguir com o pagamento.`;
                       justifyContent: 'space-between', 
                       alignItems: 'center',
                       padding: '10px', 
-                      borderBottom: index === 0 ? '1px solid #222' : 'none',
+                      borderBottom: index < opcoesFrete.length - 1 ? '1px solid #222' : 'none',
                       cursor: 'pointer',
                       background: freteSelecionado?.tipo === opcao.tipo ? '#222' : 'transparent',
                       borderRadius: '4px',
                       transition: 'background 0.2s'
                     }}
                   >
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <input 
-                          type="radio" 
-                          checked={freteSelecionado?.tipo === opcao.tipo} 
-                          onChange={() => setFreteSelecionado(opcao)}
-                          style={{ accentColor: '#fff' }}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <input 
+                        type="radio" 
+                        checked={freteSelecionado?.tipo === opcao.tipo} 
+                        onChange={() => setFreteSelecionado(opcao)}
+                        style={{ accentColor: '#fff' }}
+                      />
+                      {opcao.logo && (
+                        <img 
+                          src={opcao.logo} 
+                          alt={opcao.empresa} 
+                          style={{ width: '28px', height: '28px', objectFit: 'contain', borderRadius: '4px' }}
                         />
-                        <strong style={{ fontSize: '13px' }}>{opcao.tipo}</strong>
+                      )}
+                      <div>
+                        <strong style={{ fontSize: '13px', display: 'block' }}>{opcao.tipo}</strong>
+                        <span style={{ fontSize: '11px', color: '#888' }}>
+                          {opcao.prazoMin && opcao.prazoMin !== opcao.prazo
+                            ? `${opcao.prazoMin} a ${opcao.prazo} dias úteis`
+                            : `Até ${opcao.prazo} dias úteis`
+                          }
+                        </span>
                       </div>
-                      <span style={{ fontSize: '11px', color: '#888', marginLeft: '22px' }}>Chega em até {opcao.prazo} dias úteis</span>
                     </div>
-                    <span style={{ fontWeight: '700', fontSize: '14px' }}>
+                    <span style={{ fontWeight: '700', fontSize: '14px', whiteSpace: 'nowrap' }}>
                       R$ {opcao.valor.toFixed(2).replace('.', ',')}
                     </span>
                   </div>
@@ -310,7 +384,7 @@ Gostaria de prosseguir com o pagamento.`;
           {/* Accordions */}
           <div className="produto-accordions">
             <Accordion title="Meios de pagamento" defaultOpen={false}>
-              <p>Cartão de crédito, Pix, Boleto.</p>
+              <p>Pix</p>
             </Accordion>
             <Accordion title="Meios de envio" defaultOpen={false}>
               <p>Correios, Transportadora.</p>
@@ -327,7 +401,7 @@ Gostaria de prosseguir com o pagamento.`;
       <section className="produtos-relacionados">
         <h2 className="section-title-center">Produtos relacionados</h2>
         <div className="product-grid-center">
-          {produtosIniciais.slice(2, 4).map(prod => (
+          {produtosIniciais.filter(p => p.id !== parseInt(id, 10)).slice(0, 2).map(prod => (
              <ProductCard key={prod.id} product={prod} />
           ))}
         </div>

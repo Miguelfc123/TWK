@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
+  const scrolledRef = useRef(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -16,15 +17,30 @@ const Header = () => {
   }, [location.search]);
 
   useEffect(() => {
+    let lastSetScrolledAt = 0;
+    const debounceDelay = 200; // Menos sensível
+    
     const handleScroll = () => {
-      if (window.scrollY > 50) {
+      const currentScrollY = window.scrollY;
+      const now = Date.now();
+      
+      // Só permite mudança de estado a cada 200ms
+      if (now - lastSetScrolledAt < debounceDelay) {
+        return;
+      }
+      
+      if (currentScrollY > 150 && !scrolledRef.current) {
+        scrolledRef.current = true;
         setScrolled(true);
-      } else {
+        lastSetScrolledAt = now;
+      } else if (currentScrollY < 50 && scrolledRef.current) {
+        scrolledRef.current = false;
         setScrolled(false);
+        lastSetScrolledAt = now;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 

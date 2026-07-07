@@ -16,17 +16,24 @@ const Header = () => {
   }, [location.search]);
 
   useEffect(() => {
+    let lastScrollY = 0;
+
     const handleScroll = () => {
-      if (window.scrollY > 50) {
+      const currentScrollY = window.scrollY;
+      
+      // Hysteresis: evita que o header pisque quando o scroll está próximo do threshold
+      if (currentScrollY > 80 && !scrolled) {
         setScrolled(true);
-      } else {
+      } else if (currentScrollY < 30 && scrolled) {
         setScrolled(false);
       }
+      
+      lastScrollY = currentScrollY;
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [scrolled]);
 
   const handleSearch = (e) => {
     if (e) e.preventDefault();
