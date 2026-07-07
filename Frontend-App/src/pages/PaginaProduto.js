@@ -68,7 +68,7 @@ const produtosIniciais = [
     oldPrice: '',
     image: process.env.PUBLIC_URL + '/TheEyes.png',
     cardImage: process.env.PUBLIC_URL + '/Cards/theeyes-hover.jpg',
-    imageScale: 0.8,
+    imageScale: 0.65,
     extraImages: [
       process.env.PUBLIC_URL + '/Cards/theeyes2.JPG',
       process.env.PUBLIC_URL + '/Cards/theeyes3.JPG',
