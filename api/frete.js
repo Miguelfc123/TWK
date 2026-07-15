@@ -78,9 +78,15 @@ export default async function handler(req, res) {
       });
     }
 
-    // Filtrar apenas serviços disponíveis (sem erro) e formatar a resposta
+    const isCorreiosService = (servico) => {
+      const companyName = String(servico.company?.name || servico.name || '').toLowerCase();
+      const serviceName = String(servico.name || '').toLowerCase();
+      return companyName.includes('correios') || serviceName.includes('correios');
+    };
+
+    // Filtrar apenas serviços disponíveis (sem erro) e manter somente opções dos Correios
     const servicosDisponiveis = data
-      .filter(servico => !servico.error)
+      .filter(servico => !servico.error && isCorreiosService(servico))
       .map(servico => ({
         id: servico.id,
         nome: servico.name,

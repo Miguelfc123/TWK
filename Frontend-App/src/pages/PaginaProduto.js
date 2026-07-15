@@ -91,6 +91,8 @@ function PaginaProduto() {
   const [calculandoFrete, setCalculandoFrete] = useState(false);
   const [opcoesFrete, setOpcoesFrete] = useState(null);
   const [freteSelecionado, setFreteSelecionado] = useState(null);
+  const [freteCalculado, setFreteCalculado] = useState(false);
+  const [freteConfirmado, setFreteConfirmado] = useState(false);
   const [erroFrete, setErroFrete] = useState('');
   const [mostrarHistorico, setMostrarHistorico] = useState(true);
 
@@ -109,9 +111,19 @@ function PaginaProduto() {
   }, [id]);
 
   const handleCalcularFrete = async () => {
+    if (!tamanhoSelecionado) {
+      setErroFrete('Selecione um tamanho antes de calcular o frete.');
+      setOpcoesFrete(null);
+      setFreteSelecionado(null);
+      setFreteConfirmado(false);
+      return;
+    }
+
     if (!cep || cep.replace(/\D/g, '').length !== 8) {
       setErroFrete('Por favor, digite um CEP válido (8 dígitos).');
       setOpcoesFrete(null);
+      setFreteSelecionado(null);
+      setFreteConfirmado(false);
       return;
     }
 
@@ -119,6 +131,8 @@ function PaginaProduto() {
     setCalculandoFrete(true);
     setOpcoesFrete(null);
     setFreteSelecionado(null);
+    setFreteCalculado(false);
+    setFreteConfirmado(false);
 
     try {
       const cleanCep = cep.replace(/\D/g, '');
@@ -187,7 +201,9 @@ function PaginaProduto() {
       }));
 
       setOpcoesFrete(novasOpcoes);
-      setFreteSelecionado(novasOpcoes[0]);
+      setFreteSelecionado(null);
+      setFreteCalculado(true);
+      setFreteConfirmado(false);
 
     } catch (error) {
       console.error('Erro no cálculo de frete:', error);
@@ -197,35 +213,8 @@ function PaginaProduto() {
     }
   };
 
-  const handleComprar = () => {
-    if (!tamanhoSelecionado) {
-      alert("Por favor, selecione um tamanho antes de comprar.");
-      return;
-    }
-    
-    if (!cep || cep.trim() === '') {
-      alert("Por favor, informe seu CEP para calcularmos o frete.");
-      return;
-    }
-
-    const numeroWhatsApp = "5511932530679";
-    
-    let infoFrete = freteSelecionado 
-      ? `\n*Valor do Frete:* R$ ${freteSelecionado.valor.toFixed(2).replace('.', ',')} (${freteSelecionado.tipo} para ${freteSelecionado.local})`
-      : `\n*Meu CEP:* ${cep} (Frete não calculado na página)`;
-
-    const textoMensagem = `Olá! Tenho interesse em comprar o seguinte produto:
-    
-*Modelo:* ${produto.name}
-*Tamanho:* ${tamanhoSelecionado}
-*Quantidade:* ${quantidade}
-*Preço Unitário:* R$ ${produto.price}${infoFrete}
-
-Gostaria de prosseguir com o pagamento.`;
-
-    const textoCodificado = encodeURIComponent(textoMensagem);
-    window.open(`https://wa.me/${numeroWhatsApp}?text=${textoCodificado}`, '_blank');
-  };
+  // O botão de compra via WhatsApp foi removido.
+  // A lógica de envio permanece disponível para uso futuro, mas não é invocada atualmente.
 
   const [imagemSelecionada, setImagemSelecionada] = useState(null);
 
@@ -288,7 +277,13 @@ Gostaria de prosseguir com o pagamento.`;
                 <button 
                   key={size} 
                   className={`btn-tamanho ${tamanhoSelecionado === size ? 'selecionado' : ''}`}
-                  onClick={() => setTamanhoSelecionado(size)}
+                  onClick={() => {
+                    setTamanhoSelecionado(size);
+                    setFreteSelecionado(null);
+                    setFreteConfirmado(false);
+                    setOpcoesFrete(null);
+                    setErroFrete('');
+                  }}
                 >
                   {size}
                 </button>
@@ -305,7 +300,13 @@ Gostaria de prosseguir com o pagamento.`;
                 placeholder="00000-000" 
                 className="frete-input"
                 value={cep}
-                onChange={(e) => setCep(e.target.value)}
+                onChange={(e) => {
+                  setCep(e.target.value);
+                  setFreteSelecionado(null);
+                  setFreteConfirmado(false);
+                  setOpcoesFrete(null);
+                  setErroFrete('');
+                }}
                 maxLength="9"
               />
               <button 
@@ -323,10 +324,16 @@ Gostaria de prosseguir com o pagamento.`;
                 <p style={{ fontSize: '11px', color: '#aaa', marginBottom: '10px' }}>
                   Enviando para: <strong>{opcoesFrete[0].local}</strong>
                 </p>
+                <p style={{ fontSize: '11px', color: '#c19b4e', marginBottom: '10px' }}>
+                  Selecione uma opção abaixo para confirmar o frete.
+                </p>
                 {opcoesFrete.map((opcao, index) => (
                   <div 
                     key={index} 
-                    onClick={() => setFreteSelecionado(opcao)}
+                    onClick={() => {
+                      setFreteSelecionado(opcao);
+                      setFreteConfirmado(true);
+                    }}
                     style={{ 
                       display: 'flex', 
                       justifyContent: 'space-between', 
@@ -343,7 +350,10 @@ Gostaria de prosseguir com o pagamento.`;
                       <input 
                         type="radio" 
                         checked={freteSelecionado?.tipo === opcao.tipo} 
-                        onChange={() => setFreteSelecionado(opcao)}
+                        onChange={() => {
+                          setFreteSelecionado(opcao);
+                          setFreteConfirmado(true);
+                        }}
                         style={{ accentColor: '#fff' }}
                       />
                       {opcao.logo && (
@@ -372,14 +382,13 @@ Gostaria de prosseguir com o pagamento.`;
             )}
           </div>
 
-          {/* Quantidade e Comprar */}
+          {/* Quantidade */}
           <div className="produto-acoes">
             <div className="seletor-quantidade">
               <button onClick={() => setQuantidade(Math.max(1, quantidade - 1))}>−</button>
               <input type="text" value={quantidade} readOnly />
               <button onClick={() => setQuantidade(quantidade + 1)}>+</button>
             </div>
-            <button className="btn-comprar-black" onClick={handleComprar}>Comprar via WhatsApp</button>
           </div>
 
           {/* Accordions */}
